@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyFlow — Your Study Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">◇</span>
+        <h1>StudyFlow</h1>
+      </div>
+      <nav class="nav-tabs">
+        <button class="tab active" data-tab="timetable">Timetable</button>
+        <button class="tab" data-tab="tasks">Tasks</button>
+        <button class="tab" data-tab="pins">Pinned</button>
+        <button class="tab" data-tab="timer">Focus</button>
+        <button class="tab" data-tab="goals">Goals</button>
+        <button class="tab" data-tab="notes">Notes</button>
+        <button class="tab" data-tab="stats">Stats</button>
+        <button class="tab" data-tab="news">News</button>
+        <button class="tab" data-tab="games">Brain Games</button>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="themeToggle" title="Toggle theme">☀</button>
+        <button class="icon-btn" id="notifyToggle" title="Enable reminders">🔔</button>
+      </div>
+    </header>
+
+    <!-- Hero with image -->
+    <section class="hero">
+      <div class="hero-bg" role="img" aria-label="Study background"></div>
+      <div class="hero-content">
+        <img src="faraaz-zuberi-YoIq2GyYcAU-unsplash.jpg" alt="Study workspace" class="hero-img" />
+        <div class="hero-text">
+          <p class="hero-tagline">Plan • Focus • Achieve</p>
+          <p class="hero-quote" id="heroQuote">Small steps every day lead to big results. You've got this.</p>
+          <p class="hero-desc">Your personal study hub. Build your timetable, track tasks, and stay on top of goals.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Motivation strip -->
+    <section class="motivation-strip">
+      <p class="motivation-text" id="motivationText">The only way to do great work is to love what you're learning.</p>
+      <button type="button" class="motivation-next" id="motivationNext" title="Next quote">↻</button>
+    </section>
+
+    <!-- Study now banner (when slot is active) -->
+    <div class="study-now-banner" id="studyNowBanner" hidden>
+      <span class="study-now-text">⏱ Time is running — you have a study slot now!</span>
+      <button class="btn btn-primary btn-sm" id="studyNowDismiss">Dismiss</button>
+    </div>
+
+    <main class="main">
+      <!-- Timetable -->
+      <section class="panel active" id="panel-timetable">
+        <div class="panel-header">
+          <h2><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=120&h=80&fit=crop" alt="" class="panel-icon" /> Study Timetable</h2>
+          <div class="panel-actions">
+            <button class="btn btn-secondary" id="exportTimetableBtn">Export</button>
+            <button class="btn btn-primary" id="addSlotBtn">+ Add slot</button>
+          </div>
+        </div>
+        <div class="week-nav">
+          <button class="week-btn" id="prevWeek">←</button>
+          <span class="week-label" id="weekLabel">This week</span>
+          <button class="week-btn" id="nextWeek">→</button>
+        </div>
+        <div class="timetable-grid" id="timetableGrid"></div>
+      </section>
+
+      <!-- Tasks (mark done) -->
+      <section class="panel" id="panel-tasks">
+        <div class="panel-header">
+          <h2>Study Tasks</h2>
+          <button class="btn btn-primary" id="addTaskBtn">+ Add task</button>
+        </div>
+        <div class="tasks-list" id="tasksList"></div>
+      </section>
+
+      <!-- Pinned (do later) -->
+      <section class="panel" id="panel-pins">
+        <div class="panel-header">
+          <h2>Pinned — Do Later</h2>
+          <button class="btn btn-primary" id="addPinBtn">+ Pin something</button>
+        </div>
+        <div class="pins-list" id="pinsList"></div>
+      </section>
+
+      <!-- Focus timer (Pomodoro) -->
+      <section class="panel" id="panel-timer">
+        <div class="panel-header">
+          <h2>Focus Timer</h2>
+        </div>
+        <div class="timer-box">
+          <div class="timer-display" id="timerDisplay">25:00</div>
+          <div class="timer-mode">
+            <button class="timer-mode-btn active" data-min="25">Focus</button>
+            <button class="timer-mode-btn" data-min="5">Short break</button>
+            <button class="timer-mode-btn" data-min="15">Long break</button>
+            <button class="timer-mode-btn" data-min="custom" id="timerCustomBtn">Custom</button>
+          </div>
+          <div class="timer-custom" id="timerCustomSection">
+            <label class="timer-custom-label">Set your own time (minutes)</label>
+            <div class="timer-custom-row">
+              <input type="number" id="timerCustomMinutes" min="1" max="240" value="30" placeholder="Min" />
+              <span class="timer-custom-sep">:</span>
+              <input type="number" id="timerCustomSeconds" min="0" max="59" value="0" placeholder="Sec" />
+              <button type="button" class="btn btn-primary" id="timerApplyCustom">Use this time</button>
+            </div>
+          </div>
+          <div class="timer-actions">
+            <button class="btn btn-primary" id="timerStart">Start</button>
+            <button class="btn btn-secondary" id="timerReset">Reset</button>
+          </div>
+        </div>
+        <p class="timer-hint">We'll remind you when time's up. Enable notifications for alerts.</p>
+      </section>
+
+      <!-- Goals -->
+      <section class="panel" id="panel-goals">
+        <div class="panel-header">
+          <h2>Study Goals</h2>
+          <button class="btn btn-primary" id="addGoalBtn">+ Add goal</button>
+        </div>
+        <div class="goals-list" id="goalsList"></div>
+      </section>
+
+      <!-- Notes -->
+      <section class="panel" id="panel-notes">
+        <div class="panel-header">
+          <h2>Quick Notes</h2>
+          <button class="btn btn-primary" id="addNoteBtn">+ New note</button>
+        </div>
+        <div class="notes-grid" id="notesGrid"></div>
+      </section>
+
+      <!-- Stats -->
+      <section class="panel" id="panel-stats">
+        <div class="panel-header">
+          <h2><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=120&h=80&fit=crop" alt="" class="panel-icon" /> Your progress</h2>
+        </div>
+        <div class="stats-grid" id="statsGrid"></div>
+      </section>
+
+      <!-- Trending News -->
+      <section class="panel" id="panel-news">
+        <div class="panel-header">
+          <h2>Trending News</h2>
+          <button class="btn btn-primary" id="newsRefreshBtn">Refresh</button>
+        </div>
+        <p class="news-hint">Stay updated. Knowledge is power.</p>
+        <div class="news-loading" id="newsLoading">Loading news…</div>
+        <div class="news-list" id="newsList"></div>
+      </section>
+
+      <!-- Brain Games -->
+      <section class="panel" id="panel-games">
+        <div class="panel-header">
+          <h2>Brain Games</h2>
+        </div>
+        <p class="games-hint">Sharpen your mind with quick games.</p>
+        <div class="games-menu" id="gamesMenu">
+          <button type="button" class="game-card" data-game="memory">🧠 Memory Match</button>
+          <button type="button" class="game-card" data-game="math">🔢 Quick Math</button>
+          <button type="button" class="game-card" data-game="word">📝 Word Scramble</button>
+        </div>
+        <div class="game-area" id="gameArea"></div>
+      </section>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="slotModal">
+        <h3 id="slotModalTitle">Add study slot</h3>
+        <form id="slotForm">
+          <input type="hidden" name="slotId" value="" />
+          <label>Day</label>
+          <select name="day" required></select>
+          <label>Start time</label>
+          <input type="time" name="start" required />
+          <label>Duration (min)</label>
+          <input type="number" name="duration" min="5" max="240" value="60" required />
+          <label>Subject / Topic</label>
+          <input type="text" name="subject" placeholder="e.g. Math, Physics" required />
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary" id="slotSubmitBtn">Save</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal" id="taskModal">
+        <h3>Add task</h3>
+        <form id="taskForm">
+          <label>What to do?</label>
+          <input type="text" name="title" placeholder="e.g. Complete chapter 5" required />
+          <label>Due (optional)</label>
+          <input type="datetime-local" name="due" />
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal" id="pinModal">
+        <h3>Pin for later</h3>
+        <form id="pinForm">
+          <label>What to do later?</label>
+          <input type="text" name="title" placeholder="e.g. Revise formulas" required />
+          <label>Remind me at</label>
+          <input type="datetime-local" name="remindAt" required />
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary">Pin</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal" id="goalModal">
+        <h3>Add goal</h3>
+        <form id="goalForm">
+          <label>Goal</label>
+          <input type="text" name="title" placeholder="e.g. Finish calculus in 2 weeks" required />
+          <label>Target date (optional)</label>
+          <input type="date" name="targetDate" />
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal" id="noteModal">
+        <h3 id="noteModalTitle">New note</h3>
+        <form id="noteForm">
+          <input type="hidden" name="noteId" value="" />
+          <label>Title</label>
+          <input type="text" name="title" placeholder="Note title" />
+          <label>Content</label>
+          <textarea name="content" rows="5" placeholder="Write here..."></textarea>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+            <button type="submit" class="btn btn-primary" id="noteSubmitBtn">Save</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal modal-view-note" id="viewNoteModal">
+        <h3 class="view-note-title" id="viewNoteTitle">Note</h3>
+        <div class="view-note-content" id="viewNoteContent"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Close</button>
+          <button type="button" class="btn btn-primary" id="viewNoteEditBtn">Edit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast for reminders -->
+    <div class="toast" id="toast"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
